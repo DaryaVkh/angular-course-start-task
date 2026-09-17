@@ -1,11 +1,10 @@
 import { Component, input, output } from '@angular/core';
 import { Task } from '../../types/task.model';
 import { TimeAgoPipe } from '../../pipes/time-ago/time-ago-pipe';
-import { HighlightPipe } from '../../pipes/highlight/highlight-pipe';
 import { HighlightedTextComponent } from '../highlighted-text/highlighted-text.component';
 
 @Component({
-  imports: [TimeAgoPipe, HighlightPipe, HighlightedTextComponent],
+  imports: [TimeAgoPipe, HighlightedTextComponent],
   selector: 'app-task-item',
   styles: `
     .task {
@@ -69,7 +68,8 @@ import { HighlightedTextComponent } from '../highlighted-text/highlighted-text.c
     <div class="task" [class.task--done]="task().done">
       <h3 class="task__title" [class.task__title--done]="task().done">
         <app-highlighted-text
-          [tokens]="task().title | highlight: highlightTerm() || ''"
+          [text]="task().title"
+          [highlightTerm]="highlightTerm() || ''"
         ></app-highlighted-text>
       </h3>
       <time [attr.datetime]="task().createdAt.toISOString()">{{ task().createdAt | timeAgo }}</time>
