@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HighlightedTextComponent } from './highlighted-text.component';
+import { inputBinding } from '@angular/core';
 
 describe('HighlightedTextComponent', () => {
   let component: HighlightedTextComponent;
@@ -10,8 +11,11 @@ describe('HighlightedTextComponent', () => {
       imports: [HighlightedTextComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(HighlightedTextComponent);
+    fixture = TestBed.createComponent(HighlightedTextComponent, {
+      bindings: [inputBinding('highlightTerm', () => ''), inputBinding('text', () => '')],
+    });
     component = fixture.componentInstance;
+
     await fixture.whenStable();
   });
 
