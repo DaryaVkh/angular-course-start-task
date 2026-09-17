@@ -101,7 +101,7 @@ TimeAgo:
 - `TaskService` хранит список задач (3–5 штук, захардкоженных);
 - `TaskList` получает список из сервиса через `readonly taskService = inject(TaskService); readonly tasks = this.taskService.tasks;` и рендерит задачи (`TaskItem`) в шаблоне
   через блок `@for (task of tasks())` с `track` по `task.id`;
-- `TaskItem` принимает задачу через `readonly task = input.required<Task>();`, выводит в шаблоне свой title для идентификации и эмитит событие через `readonly toggled = output<boolean>();`
+- `TaskItem` принимает задачу через `readonly task = input.required<Task>();`, выводит в шаблоне свой title для идентификации и эмитит событие через `readonly toggled = output<number>();`
   при клике по чекбоксу `<input type="checkbox" [checked]="task().done" (change)="toggled.emit(task().id)">`;
 - `TaskList` ловит событие `done` у `TaskItem` и отдает сервису `TaskService` `<app-task-item [task]="task" (toggled)="taskService.toggle($event)" />`
 - `TimeAgo` применяется к `createdAt` в шаблоне `TaskItem`: `<span class="date">{{task.createdAt | timeAgo}}</span>`;
