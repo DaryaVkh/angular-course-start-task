@@ -1,5 +1,7 @@
-<p>
+<ul class="task-list">
   @for (task of tasks(); track task.id) {
-    <app-task-item [task]="task" (toggled)="taskService.toggle($event)" />
+    <li>
+      <app-task-item [task]="task" (toggled)="taskService.toggle($event)" />
+    </li>
   }
-</p>
+</ul>

@@ -1,0 +1,18 @@
+:host {
+  --border-radius: 16px;
+  --border-color: #cdd2c9;
+  --background-color: #f4f1e8;
+  --text: #2d3a1f;
+  --primary: #2d3a1f;
+  --accent: #b8a678;
+  --surface: #e8e2d0;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100dvh;
+  background-color: var(--background-color);
+  color: var(--text);
+}
