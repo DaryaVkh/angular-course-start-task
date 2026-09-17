@@ -1,0 +1,8 @@
+<input
+  #searchBar
+  type="search"
+  id="site-search"
+  class="search"
+  placeholder="Поиск по задачам"
+  (input)="termChanged.emit(searchBar.value)"
+/>

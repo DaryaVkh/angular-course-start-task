@@ -1,0 +1,22 @@
+.search {
+  padding: 10px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: var(--background-color);
+  font-size: medium;
+  outline: none;
+  width: 100%;
+  min-width: 300px;
+}
+
+.search:hover {
+  border-color: var(--accent);
+}
+
+.search:focus {
+  border-color: var(--accent);
+}
+
+input[type='search'] {
+  outline: none;
+}
