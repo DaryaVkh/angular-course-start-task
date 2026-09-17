@@ -4,7 +4,11 @@
   <ul class="task-items">
     @for (task of fliteredTasks(); track task.id) {
       <li>
-        <app-task-item [task]="task" (toggled)="taskService.toggle($event)" />
+        <app-task-item
+          [task]="task"
+          [highlightTerm]="this.term()"
+          (toggled)="taskService.toggle($event)"
+        />
       </li>
     }
   </ul>
