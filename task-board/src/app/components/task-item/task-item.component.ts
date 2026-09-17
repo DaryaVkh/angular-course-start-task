@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { Task } from '../../types/task.model';
-import { TimeAgoPipe } from '../../pipes/time-ago-pipe';
+import { TimeAgoPipe } from '../../pipes/time-ago/time-ago-pipe';
 
 @Component({
   imports: [TimeAgoPipe],
@@ -10,13 +10,13 @@ import { TimeAgoPipe } from '../../pipes/time-ago-pipe';
       background: var(--surface);
       outline: 2px solid var(--border-color);
       border-radius: var(--border-radius);
-      margin-bottom: 16px;
       padding: 20px;
       padding-right: 60px;
       display: block;
       box-sizing: border-box;
       min-width: 300px;
       position: relative;
+      width: 100%;
     }
 
     .task:hover {
