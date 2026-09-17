@@ -52,22 +52,22 @@ ng serve --open --port 4300
 
 1. Какую команду/команды использовали для создания приложения?
 
-Ответ:
+Ответ: ng new task-board --style=scss --ssr=false --routing=true
 
 3. Какая версия пакетов ангуляра в сгенерированном package.json?
 
-Ответ:
+Ответ: ^22.1.0, в package.lock - 22.1.6
 
 4. Какой установился пакет для тестирования?
 
-Ответ:
+Ответ: vitest
 
 ### Шаг 3. Сгенерировать код — только через CLI
 
 Создайте **командами `ng generate`** (руками файлы не создавать):
 
 | Что           | Требование                                                                                                               |
-| ------------- |--------------------------------------------------------------------------------------------------------------------------|
+| ------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `Task`        | Интерфейс: `id: number`, `title: string`, `done: boolean`, `createdAt: Date`. Название файла должно быть `task.model.ts` |
 | `TaskService` | Сервис с массивом задач в `signal` (`readonly tasks: Signal<Task[]>;`) и методом переключения `toggle`                   |
 | `TaskList`    | Компонент, стратегия обнаружения изменений — **OnPush**                                                                  |
@@ -84,15 +84,15 @@ ng serve --open --port 4300
 
 Выпишите команды, которые использовали для генерации каждого пункта:
 
-Task:
+Task: ng g interface task --type=model
 
-TaskService:
+TaskService: ng g service task-service
 
-TaskList:
+TaskList: ng g c --type=component components/task-list --change-detection=onPush
 
-TaskItem:
+TaskItem: ng g c --type=component components/task-item --inline-style --inline-template --change-detection=onPush
 
-TimeAgo:
+TimeAgo: ng g pipe time-ago
 
 ### Шаг 4. Связать
 
@@ -119,19 +119,19 @@ ng build
 
 1. Куда легла сборка и почему у файлов такие имена?
 
-Ответ:
+Ответ: в dist/task-board, дефолтные имена файлов в бандле + хэш для кэширования браузером. Также прошла минифакция, lazy загрузок нет, поэтому весь js и css в одном файле.
 
 2. Какой размер `initial` бандла показал CLI?
 
-Ответ:
+Ответ: 204.76 kB
 
 3. Чем отличается вывод `ng build` от `ng build --configuration development`?
 
-Ответ:
+Ответ: нет оптимизаций, только бандлинг, есть source map'ы для дебага
 
 4. Что покажет `ng build --dry-run` и почему такого флага у `build` нет?
 
-Ответ:
+Ответ: Error: Unknown argument: dry-run, потому что сборка не меняет исходный код проекта, и если нужно проверить на какие чанки разделиться код, все равно придется его скомпилировать. Также возможно из-за того что сборка происходит инструментами не специфичными для angular (vite, webpack, esbuild) и их интерфейсы не стали дополнительно оборачивать.
 
 ---
 
@@ -145,13 +145,13 @@ ng build
 
 ## Чек-лист сдачи
 
-- [ ] `ng new` выполнен одной командой с нужными флагами, без интерактивных вопросов
-- [ ] Все сущности из шага 3 созданы через `ng generate`
-- [ ] У обоих компонентов `changeDetection: ChangeDetectionStrategy.OnPush`
-- [ ] У `TaskItem` шаблон и стили инлайновые
-- [ ] Приложение работает: список рендерится, чекбокс переключает состояние
-- [ ] `ng build` проходит без ошибок и предупреждений о бюджетах
-- [ ] Вы ответили на все вопросы в этом файле
+- [x] `ng new` выполнен одной командой с нужными флагами, без интерактивных вопросов
+- [x] Все сущности из шага 3 созданы через `ng generate`
+- [x] У обоих компонентов `changeDetection: ChangeDetectionStrategy.OnPush`
+- [x] У `TaskItem` шаблон и стили инлайновые
+- [x] Приложение работает: список рендерится, чекбокс переключает состояние
+- [x] `ng build` проходит без ошибок и предупреждений о бюджетах
+- [x] Вы ответили на все вопросы в этом файле
 - [ ] Вы сделали Pull Request в основной репозиторий и подписали его своими именем и фамилией
 
 ---
@@ -174,17 +174,31 @@ ng generate component --help
   <summary>Подсказка 2 — что писать в сервисе</summary>
 
 ```ts
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class TaskService {
   private readonly state = signal<Task[]>([
-    { id: 1, title: 'Прочитать лекцию', done: true, createdAt: new Date(Date.now() - 3_600_000) },
-    { id: 2, title: 'Создать проект через ng new', done: false, createdAt: new Date() },
+    {
+      id: 1,
+      title: "Прочитать лекцию",
+      done: true,
+      createdAt: new Date(Date.now() - 3_600_000),
+    },
+    {
+      id: 2,
+      title: "Создать проект через ng new",
+      done: false,
+      createdAt: new Date(),
+    },
   ]);
 
   readonly tasks = this.state.asReadonly();
 
   toggle(id: number): void {
-    this.state.update((tasks) => tasks.map((task) => (task.id === id ? { ...task, done: !task.done } : task)));
+    this.state.update((tasks) =>
+      tasks.map((task) =>
+        task.id === id ? { ...task, done: !task.done } : task,
+      ),
+    );
   }
 }
 ```
@@ -196,12 +210,16 @@ export class TaskService {
 
 ```ts
 @Component({
-  selector: 'app-task-item',
+  selector: "app-task-item",
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TimeAgoPipe],
   template: `
     <label>
-      <input type="checkbox" [checked]="task().done" (change)="toggled.emit(task().id)" />
+      <input
+        type="checkbox"
+        [checked]="task().done"
+        (change)="toggled.emit(task().id)"
+      />
       {{ task().title }} — {{ task().createdAt | timeAgo }}
     </label>
   `,
