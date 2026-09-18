@@ -84,15 +84,15 @@ ng serve --open --port 4300
 
 Выпишите команды, которые использовали для генерации каждого пункта:
 
-Task:
+Task: ng g interface task --type=model
 
-TaskService:
+TaskService: ng g service task-service
 
-TaskList:
+TaskList: ng g c task-list --change-detection=OnPush
 
-TaskItem:
+TaskItem: ng g c task-item --change-detection=OnPush --inline-template --inline-style
 
-TimeAgo:
+TimeAgo: ng g pipe time-ago
 
 ### Шаг 4. Связать
 
