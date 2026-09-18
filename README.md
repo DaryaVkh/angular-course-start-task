@@ -52,15 +52,15 @@ ng serve --open --port 4300
 
 1. Какую команду/команды использовали для создания приложения?
 
-Ответ:
+Ответ: ng new task-board --style=scss --routing --ssr=false
 
 2. Какая версия пакетов ангуляра в сгенерированном package.json?
 
-Ответ:
+Ответ: 21 (^21.2.0, а для @angular/build и @angular/cli ^21.2.24)
 
 3. Какой установился пакет для тестирования?
 
-Ответ:
+Ответ: vitest
 
 ### Шаг 3. Сгенерировать код — только через CLI
 
@@ -84,15 +84,15 @@ ng serve --open --port 4300
 
 Выпишите команды, которые использовали для генерации каждого пункта:
 
-Task:
+Task: ng g interface task --type=model
 
-TaskService:
+TaskService: ng g service task-service
 
-TaskList:
+TaskList: ng g c task-list --change-detection=OnPush
 
-TaskItem:
+TaskItem: ng g c task-item --change-detection=OnPush --inline-template --inline-style
 
-TimeAgo:
+TimeAgo: ng g pipe time-ago
 
 ### Шаг 4. Связать
 
@@ -119,20 +119,19 @@ ng build
 
 1. Куда легла сборка и почему у файлов такие имена?
 
-Ответ:
+Ответ: сборка легла в dist/task-board/browser/, имена файлов main и styles с хешем на конце, чтобы если содержимое файла между сборками не поменялось, хеш будет тот же и браузер возьмет файл из кэша, а если что-то поменялось, соответственно, не возьмет, скачает новую версию
 
 2. Какой размер `initial` бандла показал CLI?
 
-Ответ:
+Ответ: 201.96 kB (Raw size) и 55.14 kB (Estimated transfer size)
 
 3. Чем отличается вывод `ng build` от `ng build --configuration development`?
 
-Ответ:
+Ответ: в production (ng build) включены AOT, минификация, tree-shaking, хеши в именах файлов и бюджеты размера — сборка упадёт, если бандл вырос сверх лимита. В development (ng build --configuration development) — sourcemaps и быстрая пересборка.
 
 4. Что покажет `ng build --dry-run` и почему такого флага у `build` нет?
 
-Ответ:
-
+Ответ: Error: Unknown argument: dry-run; флага нет, т к build не создает файлы проекта, а компилирует, и чтобы узнать итоговые файлы, нужно прогнать ts, сборку, минификацию => предпросмотр стоил бы столько же, сколько сама сборка, и смысла не имеет
 ---
 
 ## Constraints
