@@ -52,15 +52,15 @@ ng serve --open --port 4300
 
 1. Какую команду/команды использовали для создания приложения?
 
-Ответ:
+Ответ: `ng new task-board --style=scss --routing --ssr=false`
 
 2. Какая версия пакетов ангуляра в сгенерированном package.json?
 
-Ответ:
+Ответ: `^21.2.0`
 
 3. Какой установился пакет для тестирования?
 
-Ответ:
+Ответ: `^4.0.8`
 
 ### Шаг 3. Сгенерировать код — только через CLI
 
@@ -84,15 +84,15 @@ ng serve --open --port 4300
 
 Выпишите команды, которые использовали для генерации каждого пункта:
 
-Task:
+Task: `ng generate interface task model`
 
-TaskService:
+TaskService: `ng generate service task`
 
-TaskList:
+TaskList: `ng generate component task-list --change-detection=OnPush`
 
-TaskItem:
+TaskItem: `ng generate component task-item --change-detection=OnPush --inline-template --inline-style`
 
-TimeAgo:
+TimeAgo: `ng generate pipe time-ago`
 
 ### Шаг 4. Связать
 
@@ -119,19 +119,19 @@ ng build
 
 1. Куда легла сборка и почему у файлов такие имена?
 
-Ответ:
+Ответ: `/Users/ahmatnurov/Angular/1_lesson/dist/1_lesson`. В именах файлов используются хэши чтобы браузер всегда брал актуальную версию файла
 
 2. Какой размер `initial` бандла показал CLI?
 
-Ответ:
+Ответ: 251.82 kB
 
 3. Чем отличается вывод `ng build` от `ng build --configuration development`?
 
-Ответ:
+Ответ: в development сборке больше размера файла из-за сокращения кода для прода. 
 
 4. Что покажет `ng build --dry-run` и почему такого флага у `build` нет?
 
-Ответ:
+Ответ: `Error: Unknown argument: dry-run`, потому что для генерации полезно предпросмотреть код шаблонов, а какой смысл в предпросмотре билда (и как это реализовать) - непонятно
 
 ---
 
