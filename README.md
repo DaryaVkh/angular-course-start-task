@@ -52,15 +52,15 @@ ng serve --open --port 4300
 
 1. Какую команду/команды использовали для создания приложения?
 
-Ответ:
+Ответ: ng new task-bord --style=scss --ssr=false --routing=true
 
 2. Какая версия пакетов ангуляра в сгенерированном package.json?
 
-Ответ:
+Ответ: 21.2.24
 
 3. Какой установился пакет для тестирования?
 
-Ответ:
+Ответ: "vitest": "^4.0.8"
 
 ### Шаг 3. Сгенерировать код — только через CLI
 
@@ -84,15 +84,15 @@ ng serve --open --port 4300
 
 Выпишите команды, которые использовали для генерации каждого пункта:
 
-Task:
+Task: ng g i Task model
 
-TaskService:
+TaskService: ng g s TaskService
 
-TaskList:
+TaskList: ng g c TaskList -c OnPush
 
-TaskItem:
+TaskItem: ng g c TaskItem -c OnPush -st
 
-TimeAgo:
+TimeAgo: ng g p TimeAgo
 
 ### Шаг 4. Связать
 
@@ -121,17 +121,35 @@ ng build
 
 Ответ:
 
+\task-bord\dist\task-bord
+main - точка входа
+styles - стили
+
+после назвачения - хеш
+
 2. Какой размер `initial` бандла показал CLI?
 
 Ответ:
+
+Raw size  | Estimated transfer size
+201.44 kB |                55.05 kB
+
 
 3. Чем отличается вывод `ng build` от `ng build --configuration development`?
 
 Ответ:
 
+ng build (Production): минификация и другие оптимизации
+
+ng build --configuration development (Dev): source maps и быстрее
+
+ну и другое
+
 4. Что покажет `ng build --dry-run` и почему такого флага у `build` нет?
 
 Ответ:
+
+`Unknown option: '--dry-run'` - это легко обратимое действие
 
 ---
 
@@ -145,13 +163,13 @@ ng build
 
 ## Чек-лист сдачи
 
-- [ ] `ng new` выполнен одной командой с нужными флагами, без интерактивных вопросов
-- [ ] Все сущности из шага 3 созданы через `ng generate`
-- [ ] У обоих компонентов `changeDetection: ChangeDetectionStrategy.OnPush`
-- [ ] У `TaskItem` шаблон и стили инлайновые
-- [ ] Приложение работает: список рендерится, чекбокс переключает состояние
-- [ ] `ng build` проходит без ошибок и предупреждений о бюджетах
-- [ ] Вы ответили на все вопросы в этом файле
+- [x] `ng new` выполнен одной командой с нужными флагами, без интерактивных вопросов
+- [x] Все сущности из шага 3 созданы через `ng generate`
+- [x] У обоих компонентов `changeDetection: ChangeDetectionStrategy.OnPush`
+- [x] У `TaskItem` шаблон и стили инлайновые
+- [x] Приложение работает: список рендерится, чекбокс переключает состояние
+- [x] `ng build` проходит без ошибок и предупреждений о бюджетах
+- [x] Вы ответили на все вопросы в этом файле
 - [ ] Вы сделали Pull Request в основной репозиторий и подписали его своими именем и фамилией
 
 ---
