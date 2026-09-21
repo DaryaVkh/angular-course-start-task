@@ -1,0 +1,29 @@
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'timeAgo',
+})
+export class TimeAgoPipe implements PipeTransform {
+  transform(value: Date): string {
+    const seconds = Math.floor((Date.now() - new Date(value).getTime()) / 1000);
+
+    if (seconds < 60) return 'только что';
+
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${this.plural(minutes, 'минуту', 'минуты', 'минут')} назад`;
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${this.plural(hours, 'час', 'часа', 'часов')} назад`;
+
+    const days = Math.floor(hours / 24);
+    return `${this.plural(days, 'день', 'дня', 'дней')} назад`;
+  }
+
+  private plural(n: number, one: string, few: string, many: string): string {
+    const mod10 = n % 10;
+    const mod100 = n % 100;
+    if (mod10 === 1 && mod100 !== 11) return `${n} ${one}`;
+    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return `${n} ${few}`;
+    return `${n} ${many}`;
+  }
+}
