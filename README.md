@@ -52,15 +52,15 @@ ng serve --open --port 4300
 
 1. Какую команду/команды использовали для создания приложения?
 
-Ответ:
+Ответ: ng new --name task-board --style scss --ssr false --ai-config none
 
 2. Какая версия пакетов ангуляра в сгенерированном package.json?
 
-Ответ:
+Ответ: 21.2.0
 
 3. Какой установился пакет для тестирования?
 
-Ответ:
+Ответ: vitest
 
 ### Шаг 3. Сгенерировать код — только через CLI
 
@@ -84,15 +84,15 @@ ng serve --open --port 4300
 
 Выпишите команды, которые использовали для генерации каждого пункта:
 
-Task:
+Task: ng generate interface task model
 
-TaskService:
+TaskService: ng generate service task-service
 
-TaskList:
+TaskList:  ng generate component task-list --change-detection OnPush
 
-TaskItem:
+TaskItem: ng generate component task-item --change-detection OnPush --inline-style --inline-template
 
-TimeAgo:
+TimeAgo: ng generate pipe time-ago
 
 ### Шаг 4. Связать
 
@@ -119,19 +119,19 @@ ng build
 
 1. Куда легла сборка и почему у файлов такие имена?
 
-Ответ:
+Ответ: angular-course-start-task\task-board\dist\task-board; имена файлов с хэшами, чтобы не пересобирать каждый раз чанки без изменений
 
 2. Какой размер `initial` бандла показал CLI?
 
-Ответ:
+Ответ: 200.48 kB raw size, 54.76 kB estimated transfer size 
 
 3. Чем отличается вывод `ng build` от `ng build --configuration development`?
 
-Ответ:
+Ответ: В таблице нет колонки Estimated transfer size, сам билд ощутимо больше, к именам не добавляются  хэши
 
 4. Что покажет `ng build --dry-run` и почему такого флага у `build` нет?
 
-Ответ:
+Ответ: Error: Unknown argument: dry-run; он не может сказать размеры пока не сбилдит, предпросмотр без операции не имеет смысла
 
 ---
 

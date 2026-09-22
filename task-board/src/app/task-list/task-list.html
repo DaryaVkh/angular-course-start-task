@@ -1,0 +1,10 @@
+<ul>
+  @for (task of tasks(); track task.id) {
+    <li>
+      <app-task-item [task]="task" (toggled)="taskService.toggle($event)" />
+    </li>
+  }
+  @empty {
+    <li>Нет задач</li>
+  }
+</ul>
