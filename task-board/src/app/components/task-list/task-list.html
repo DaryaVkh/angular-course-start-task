@@ -1,0 +1,16 @@
+<section class="board">
+  <header class="board__header">
+    <h1 class="board__title">Доска задач</h1>
+    <p class="board__counter">Выполнено {{ doneCount() }} из {{ tasks().length }}</p>
+  </header>
+
+  <ul class="board__list">
+    @for (task of tasks(); track task.id) {
+      <li>
+        <app-task-item [task]="task" (toggled)="taskService.toggle($event)" />
+      </li>
+    } @empty {
+      <li class="board__empty">Задач пока нет</li>
+    }
+  </ul>
+</section>

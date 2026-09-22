@@ -54,13 +54,20 @@ ng serve --open --port 4300
 
 Ответ:
 
+```bash
+ng new task-board --style=scss --routing --ssr=false --ai-config=none --skip-git --package-manager=npm --dry-run
+ng new task-board --style=scss --routing --ssr=false --ai-config=none --skip-git --package-manager=npm
+```
+
+Сначала прогнал с `--dry-run`, потом уже без него. `--skip-tests` не указывал, чтобы тесты остались. `--ai-config=none` нужен, чтобы cli не задавал вопрос про настройку AI-инструментов, а `--skip-git` - потому что проект лежит внутри форка и второй git-репозиторий внутри не нужен.
+
 2. Какая версия пакетов ангуляра в сгенерированном package.json?
 
-Ответ:
+Ответ: `^22.1.0` (по факту установилась 22.1.7), у `@angular/cli` и `@angular/build` - `^22.1.8`.
 
 3. Какой установился пакет для тестирования?
 
-Ответ:
+Ответ: vitest (`^4.0.8`) и jsdom для него. Karma по умолчанию больше не ставится.
 
 ### Шаг 3. Сгенерировать код — только через CLI
 
@@ -86,13 +93,37 @@ ng serve --open --port 4300
 
 Task:
 
+```bash
+ng g interface models/task model
+```
+
 TaskService:
+
+```bash
+ng g service services/task --type=service
+```
+
+(без `--type=service` файл получается `task.ts`, а класс `Task`, но это имя уже занято интерфейсом)
 
 TaskList:
 
+```bash
+ng g component components/task-list --change-detection=OnPush
+```
+
 TaskItem:
 
+```bash
+ng g component components/task-item --change-detection=OnPush --inline-template --inline-style
+```
+
 TimeAgo:
+
+```bash
+ng g pipe pipes/time-ago
+```
+
+Замечание: в Angular 22 OnPush стал стратегией по умолчанию, поэтому с флагом `--change-detection=OnPush` строка `changeDetection` в компонент не генерируется (генератор добавляет её только для `Eager`). Флаг я передал, а строку `changeDetection: ChangeDetectionStrategy.OnPush` дописал сам, потому что она есть в чек-листе. Ещё сервис теперь генерируется с декоратором `@Service()` вместо `@Injectable({ providedIn: 'root' })`, работает так же.
 
 ### Шаг 4. Связать
 
@@ -119,19 +150,19 @@ ng build
 
 1. Куда легла сборка и почему у файлов такие имена?
 
-Ответ:
+Ответ: в `dist/task-board/browser` (`index.html`, `main-J6XN2KE6.js`, `styles-64CVBVSV.css`, `favicon.ico`), рядом в `dist/task-board` лежат `3rdpartylicenses.txt` и `prerendered-routes.json`. В именах файлов хэш от содержимого, его добавляет `outputHashing: "all"` в production-конфигурации. Это нужно для кэширования: если файл поменялся, меняется и имя, и браузер не возьмёт старую версию из кэша.
 
 2. Какой размер `initial` бандла показал CLI?
 
-Ответ:
+Ответ: Initial total - 212.45 kB (main 212.32 kB + styles 129 bytes), estimated transfer size - 58.65 kB. В бюджет 500 kB укладывается, предупреждений нет.
 
 3. Чем отличается вывод `ng build` от `ng build --configuration development`?
 
-Ответ:
+Ответ: `ng build` по умолчанию собирает production: код минифицирован, в именах файлов хэши, нет source map, проверяются бюджеты, main весит 212 kB, и в выводе есть колонка Estimated transfer size. С `--configuration development` оптимизации нет: `main.js` весит 1.34 MB, имена без хэшей, появляются `.map` файлы, лицензии не выносятся в отдельный файл, бюджеты не проверяются. Зато собирается быстрее и удобнее отлаживать.
 
 4. Что покажет `ng build --dry-run` и почему такого флага у `build` нет?
 
-Ответ:
+Ответ: ошибку `Unknown argument: dry-run`. `--dry-run` есть у команд, которые создают или меняют файлы проекта через схематики (`ng new`, `ng generate`, `ng add`): они могут показать, что будет создано, и ничего не записывать. `ng build` исходники не трогает, он просто собирает проект в `dist`, поэтому пробный запуск для него не имеет смысла.
 
 ---
 
@@ -145,13 +176,13 @@ ng build
 
 ## Чек-лист сдачи
 
-- [ ] `ng new` выполнен одной командой с нужными флагами, без интерактивных вопросов
-- [ ] Все сущности из шага 3 созданы через `ng generate`
-- [ ] У обоих компонентов `changeDetection: ChangeDetectionStrategy.OnPush`
-- [ ] У `TaskItem` шаблон и стили инлайновые
-- [ ] Приложение работает: список рендерится, чекбокс переключает состояние
-- [ ] `ng build` проходит без ошибок и предупреждений о бюджетах
-- [ ] Вы ответили на все вопросы в этом файле
+- [x] `ng new` выполнен одной командой с нужными флагами, без интерактивных вопросов
+- [x] Все сущности из шага 3 созданы через `ng generate`
+- [x] У обоих компонентов `changeDetection: ChangeDetectionStrategy.OnPush`
+- [x] У `TaskItem` шаблон и стили инлайновые
+- [x] Приложение работает: список рендерится, чекбокс переключает состояние
+- [x] `ng build` проходит без ошибок и предупреждений о бюджетах
+- [x] Вы ответили на все вопросы в этом файле
 - [ ] Вы сделали Pull Request в основной репозиторий и подписали его своими именем и фамилией
 
 ---
