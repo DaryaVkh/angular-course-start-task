@@ -52,15 +52,21 @@ ng serve --open --port 4300
 
 1. Какую команду/команды использовали для создания приложения?
 
-Ответ:
+Ответ: 
+```bash
+ng new task-board --style=scss --routing=true --ssr=false --dry-run
+```
+```bash
+ng new task-board --style=scss --routing=true --ssr=false
+```
 
 2. Какая версия пакетов ангуляра в сгенерированном package.json?
 
-Ответ:
+Ответ: ^21.2.0
 
 3. Какой установился пакет для тестирования?
 
-Ответ:
+Ответ: vitest
 
 ### Шаг 3. Сгенерировать код — только через CLI
 
@@ -85,14 +91,29 @@ ng serve --open --port 4300
 Выпишите команды, которые использовали для генерации каждого пункта:
 
 Task:
+```bash 
+ng generate interface task.model
+```
 
 TaskService:
+```bash 
+ng generate service task-service
+```
 
 TaskList:
+```bash 
+ng g component task-list --change-detection=OnPush
+```
 
 TaskItem:
+```bash 
+ng g c task-item --change-detection=OnPush --inline-template --inline-style
+```
 
 TimeAgo:
+```bash 
+ng g pipe time-ago
+```
 
 ### Шаг 4. Связать
 
@@ -119,20 +140,44 @@ ng build
 
 1. Куда легла сборка и почему у файлов такие имена?
 
-Ответ:
+Ответ: Сборка легла в 
+```bash
+...\task-board\dist\task-board
+```
+Имена файлов main-ZJTWBDOE.js и styles-5INURTSO.css 
+Это хэш для браузера, при изменении сборки он должен измениться
 
 2. Какой размер `initial` бандла показал CLI?
 
-Ответ:
+Ответ: 202.61 kB
 
 3. Чем отличается вывод `ng build` от `ng build --configuration development`?
 
-Ответ:
+Ответ: Названия файлов без хэшей, сборка заняла больший размер (1.28 MB). Сборка через `ng build` оптимизированная, а dev-конфиг предназначен для разработки и менее оптимизирован
 
+```
+Initial chunk files | Names         |  Raw size | Estimated transfer size
+main-ZJTWBDOE.js    | main          | 202.61 kB |                55.34 kB
+styles-5INURTSO.css | styles        |   0 bytes |                 0 bytes
+
+                    | Initial total | 202.61 kB |                55.34 kB
+```
+
+```
+Initial chunk files | Names         | Raw size
+main.js             | main          |  1.28 MB |
+styles.css          | styles        | 96 bytes |
+
+                    | Initial total |  1.28 MB
+```
 4. Что покажет `ng build --dry-run` и почему такого флага у `build` нет?
 
 Ответ:
-
+```bash
+PS ...\task-board> ng build --dry-run
+Error: Unknown argument: dry-run
+```
+dry-run нужен для отслеживания изменений, чаще для создания файлов, а билд не изменяет проект.
 ---
 
 ## Constraints
@@ -145,13 +190,13 @@ ng build
 
 ## Чек-лист сдачи
 
-- [ ] `ng new` выполнен одной командой с нужными флагами, без интерактивных вопросов
-- [ ] Все сущности из шага 3 созданы через `ng generate`
-- [ ] У обоих компонентов `changeDetection: ChangeDetectionStrategy.OnPush`
-- [ ] У `TaskItem` шаблон и стили инлайновые
-- [ ] Приложение работает: список рендерится, чекбокс переключает состояние
-- [ ] `ng build` проходит без ошибок и предупреждений о бюджетах
-- [ ] Вы ответили на все вопросы в этом файле
+- [X] `ng new` выполнен одной командой с нужными флагами, без интерактивных вопросов
+- [X] Все сущности из шага 3 созданы через `ng generate`
+- [X] У обоих компонентов `changeDetection: ChangeDetectionStrategy.OnPush`
+- [X] У `TaskItem` шаблон и стили инлайновые
+- [X] Приложение работает: список рендерится, чекбокс переключает состояние
+- [X] `ng build` проходит без ошибок и предупреждений о бюджетах
+- [X] Вы ответили на все вопросы в этом файле
 - [ ] Вы сделали Pull Request в основной репозиторий и подписали его своими именем и фамилией
 
 ---

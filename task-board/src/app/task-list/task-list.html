@@ -1,0 +1,7 @@
+<h1 class="page-title">Моя доска задач</h1>
+
+<div class="task-list">
+    @for(task of tasks(); track task.id) {
+        <app-task-item [task]="task" (toggled)="taskService.toggle($event)" />
+    }
+</div>
