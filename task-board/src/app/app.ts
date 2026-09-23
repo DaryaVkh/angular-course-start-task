@@ -1,3 +1,4 @@
+import { environment} from '../environments/environment';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TaskListComponent } from './components/task-list/task-list.component';
@@ -8,4 +9,6 @@ import { TaskListComponent } from './components/task-list/task-list.component';
   styleUrl: './app.scss',
   templateUrl: './app.html',
 })
-export class App {}
+export class App {
+  readonly apiUrl = environment.apiUrl;
+}

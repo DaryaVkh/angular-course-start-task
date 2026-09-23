@@ -1,4 +1,4 @@
-# Приручить `angular.json`
+# Приручить `task-board/angular.json`
 
 🟠 Уровень: средний · ⏱ 60–90 минут · Тема: [start](../../lecture/advanced.md)
 
@@ -22,7 +22,7 @@ ng new task-board --style=scss --routing --ssr=false
 ## Information
 
 `ng serve` и `ng build` — это две строчки в терминале, за которыми стоит один файл.
-Пока не разберёшься с `angular.json`, любая нестандартная задача («а как собрать
+Пока не разберёшься с `task-board/angular.json`, любая нестандартная задача («а как собрать
 для стенда?», «почему CI падает на размере?», «куда воткнуть глобальный SCSS?»)
 превращается в спросить у нейронки, что куда должно быть.
 
@@ -38,16 +38,22 @@ ng new task-board --style=scss --routing --ssr=false
 Не открывая редактор, ответьте через `ng config`:
 
 ```bash
-ng config projects.task-board.architect.build.builder
-ng config projects.task-board.architect.build.defaultConfiguration
-ng config projects.task-board.prefix
+ng config projects.task-board.architect.build.builder -> "@angular/build:application"
+ng config projects.task-board.architect.build.defaultConfiguration -> "production"
+ng config projects.task-board.prefix -> "app"
 ```
 
 > Если у вас проект на новом билдере, ключ может называться `targets`, а не `architect` —
-> посмотрите, какой из них есть в вашем `angular.json`, и используйте его.
+> посмотрите, какой из них есть в вашем `task-board/angular.json`, и используйте его.
 
 Затем найдите в файле и выпишите: где задан выходной каталог, где подключаются глобальные
 стили, где перечислены бюджеты.
+
+Выходной каталог: `ng config projects.task-board.architect.build.configurations.<конфигурация>.outputPath`
+
+Глобальные стили: `ng config projects.task-board.architect.build.options.styles`
+
+Бюджеты: `ng config projects.task-board.architect.build.configurations.<конфигурация>.budgets`
 
 ### Шаг 2. Дефолты схематик для команды
 
@@ -70,6 +76,22 @@ ng g c smoke-test --dry-run
 (`--dry-run` ничего не создаст, но покажет список файлов; чтобы увидеть содержимое,
 сгенерируйте компонент по-настоящему, посмотрите и удалите.)
 
+Получились такие настройки в angular.json:
+
+```json
+{
+  "schematics": {
+    "@schematics/angular:component": {
+      "style": "scss",
+      "changeDetection": "OnPush"
+    },
+    "@schematics/angular:service": {
+      "skipTests": true
+    }
+  }
+}
+```
+
 ### Шаг 3. Окружения
 
 Добавьте файлы окружений и третье окружение — `staging`:
@@ -80,7 +102,7 @@ ng g environments
 
 Нужно получить:
 
-- `environment.ts` — прод: `production: true`, `apiUrl: 'https://api.example.com'`;
+- `environment.ts` — прод: `production: true, apiUrl: 'https://api.example.com'`;
 - `environment.development.ts` — дев: `production: false`, `apiUrl: 'http://localhost:3000'`;
 - `environment.staging.ts` — стенд: `production: false`, `apiUrl: 'https://staging.example.com'`.
 
@@ -104,7 +126,7 @@ ng build --configuration staging
 ng serve --configuration staging --port 4301
 ```
 
-В браузере должен быть `https://staging.example.com`, в `dist/` — файлы с хешами,
+В браузере должен быть `https://staging.example.com`, в `task-board/dist` — файлы с хешами,
 а в `index.html` — `<base href="/staging/">`.
 
 ### Шаг 5. Сломать сборку бюджетами и починить
@@ -116,6 +138,8 @@ ng serve --configuration staging --port 4301
    там указан фактический размер.
 3. Верните адекватный лимит: `maximumWarning: "500kb"`, `maximumError: "1mb"`.
 
+> Ошибка: X [ERROR] bundle initial exceeded maximum budget. Budget 100.00 kB was not met by 115.64 kB with a total of 215.64 kB.
+
 Затем добавьте бюджет, которого не было:
 
 ```jsonc
@@ -125,13 +149,15 @@ ng serve --configuration staging --port 4301
 Проверьте, что он работает: временно раздуйте стиль одного компонента
 (например, сгенерируйте много CSS-правил) и убедитесь, что появилось предупреждение.
 
+> ▲ [WARNING] src/app/app.scss exceeded maximum budget. Budget 2.00 kB was not met by 522 bytes with a total of 2.52 kB.
+
 ### Шаг 6. Заглянуть внутрь бандла
 
 ```bash
 ng build --configuration production --stats-json
 ```
 
-Найдите получившийся файл статистики в `dist/` и откройте его визуализатором:
+Найдите получившийся файл статистики в `task-board/dist` и откройте его визуализатором:
 
 ```bash
 # для application-билдера (esbuild)
@@ -144,8 +170,11 @@ npx source-map-explorer "dist/task-board/browser/*.js"
 Ответьте:
 
 1. Какая часть бандла приходится на код Angular, а какая — на ваш?
+> На мой код приходится 2.79% компонентов + 0.84% на стили. Оставшиеся 96.37% на Angular.
 2. Что попало в `initial`?
+> Весь код компонентов, весь css, Angular и его зависимости, так как нет ленивых загрузок.
 3. Что изменится в размерах, если собрать с `--configuration development`? Почему?
+> Размеры билда увеличиваются (211kB -> 1.28MB), так как отключены оптимизации: `minification of scripts and styles, tree-shaking, dead-code elimination, inlining of critical CSS and fonts inlining` 
 
 ### Шаг 7. Посмотреть на «взрослый» конфиг
 
@@ -153,19 +182,38 @@ npx source-map-explorer "dist/task-board/browser/*.js"
 проект `angular-injection-token`. Ответьте:
 
 1. Какой у него билдер и чем он отличается от билдера в вашем `task-board`?
+
+```json
+{
+  "builder": "@angular-devkit/build-angular:browser"
+}
+```
+
+> Билдер на основе webpack, вместо vite + esbuild. Сборка с esbuild работает быстрее, а dev сервер на Vite не требует полной предворительной сборки.
+
 2. Почему у этого проекта заполнено поле `root`, а у вашего оно пустое?
-3. Как имя проекта в `angular.json` связано с командой
+
+> Потому что в моем приложении корень проекта совпадает с корнем всего workspace'а. `angular-injection-token` находится во вложенной директории, поэтому нужно явно указать путь до него.
+
+3. Как имя проекта в `task-board/angular.json` связано с командой
    `npm run serve:angular-injection-token` в [package.json](../../../../package.json)?
+
+> Имя проекта используется в скрипте описанном в package.json (`ng serve angular-injection-token`). Само название скрипта (`serve:angular-injection-token`) может меняться отдельно.
+
 4. Что нужно поменять в конфиге проекта, чтобы перевести его на
    `@angular/build:application`? (Отвечать словами, менять ничего не нужно —
    миграция для этого называется `use-application-builder`.)
+
+```bash
+ng update @angular/cli --name use-application-builder
+```
 
 ---
 
 ## Constraints
 
 - Шаги 2 выполняется **только через `ng config`** — руками JSON в этом шаге не править.
-- В шагах 4–5 править `angular.json` руками можно и нужно: это тоже навык.
+- В шагах 4–5 править `task-board/angular.json` руками можно и нужно: это тоже навык.
 - Не поднимайте лимиты бюджетов «чтобы собралось» — в шаге 5 нужно именно увидеть падение
   и осознанно вернуть разумные значения.
 - Все изменения должны быть воспроизводимы: после `rm -rf dist && ng build -c staging`
@@ -175,14 +223,14 @@ npx source-map-explorer "dist/task-board/browser/*.js"
 
 ## Чек-лист сдачи
 
-- [ ] `ng g c foo` без флагов создаёт SCSS + `OnPush`
-- [ ] Есть три файла окружений, `apiUrl` виден в UI и меняется в зависимости от конфигурации
-- [ ] `ng build -c staging` собирает с хешами и `<base href="/staging/">`
+- [x] `ng g c foo` без флагов создаёт SCSS + `OnPush`
+- [x] Есть три файла окружений, `apiUrl` виден в UI и меняется в зависимости от конфигурации
+- [x] `ng build -c staging` собирает с хешами и `<base href="/staging/">`
 - [ ] `ng serve -c staging` поднимается и показывает staging-адрес
-- [ ] Вы видели своими глазами падение сборки по бюджету и текст ошибки
-- [ ] Бюджет `anyComponentStyle` срабатывает на раздутом стиле
-- [ ] Открыт визуализатор бандла, вы можете назвать три самых тяжёлых куска
-- [ ] Есть ответы на вопросы шага 7
+- [x] Вы видели своими глазами падение сборки по бюджету и текст ошибки
+- [x] Бюджет `anyComponentStyle` срабатывает на раздутом стиле
+- [x] Открыт визуализатор бандла, вы можете назвать три самых тяжёлых куска
+- [x] Есть ответы на вопросы шага 7
 
 ---
 
