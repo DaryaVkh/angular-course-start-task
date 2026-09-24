@@ -52,15 +52,20 @@ ng serve --open --port 4300
 
 1. Какую команду/команды использовали для создания приложения?
 
-Ответ:
+Ответ: 
+ng new task-board --style scss --routing true --ssr false --zoneless true --standalone true --minimal false --package-manager npm --ai-config=none
 
 2. Какая версия пакетов ангуляра в сгенерированном package.json?
 
 Ответ:
+^22.1.0: @angular/core, common, compiler, forms, platform-browser, router
+^22.1.0: @angular/cli, @angular/build, @angular/compiler-cli
 
 3. Какой установился пакет для тестирования?
 
 Ответ:
+vitest ^4.0.8
+jsdom ^28.0.0
 
 ### Шаг 3. Сгенерировать код — только через CLI
 
@@ -84,15 +89,15 @@ ng serve --open --port 4300
 
 Выпишите команды, которые использовали для генерации каждого пункта:
 
-Task:
+Task: ng g interface task model
 
-TaskService:
+TaskService: ng g service task --type=service
 
-TaskList:
+TaskList: ng g c task-list --change-detection=OnPush
 
-TaskItem:
+TaskItem: ng g c task-item --change-detection=OnPush --inline-template --inline-style
 
-TimeAgo:
+TimeAgo: ng g pipe time-ago
 
 ### Шаг 4. Связать
 
@@ -119,20 +124,32 @@ ng build
 
 1. Куда легла сборка и почему у файлов такие имена?
 
-Ответ:
+Ответ: 
+сборка легла в angular-course-start-task\task-board\dist\task-board\browser.
+имена с непонятными суффиксами, потому что берётся хэш от содержимого каждого файла
+таким способом мы можем смотреть, изменились файлы или нет. это нужно для кэширования в браузере, браузер видит, что какие-то файлы изменились и скачивает новую версию статики 
 
 2. Какой размер `initial` бандла показал CLI?
 
 Ответ:
+Raw size 210.50 kB
+Estimated transfer size: 58.05 kB
+всё из main, по styles 0 bytes
 
 3. Чем отличается вывод `ng build` от `ng build --configuration development`?
 
 Ответ:
+ng build собирает конфигурацию для production по умолчанию, код минифицируется, бандл заметно меньше по размеру
+в production есть хэши в названии (то, что в первом пункте обсуждалось), в development их нет
+в production проверяются бюджеты размера бандла, а в development нет
+ну и с development быстрее собирается
 
 4. Что покажет `ng build --dry-run` и почему такого флага у `build` нет?
 
 Ответ:
-
+покажет Error: Unknown argument: dry-run
+такого флага нет, потому что чтобы --dry-run сделать нужно сбилдить предварительно, а если мы уже сбилдили, то смысл от этого флага)
+так что --dry-run применить можно только у команд на основе схематиков (ng new, ng generate)
 ---
 
 ## Constraints
@@ -145,14 +162,14 @@ ng build
 
 ## Чек-лист сдачи
 
-- [ ] `ng new` выполнен одной командой с нужными флагами, без интерактивных вопросов
-- [ ] Все сущности из шага 3 созданы через `ng generate`
-- [ ] У обоих компонентов `changeDetection: ChangeDetectionStrategy.OnPush`
-- [ ] У `TaskItem` шаблон и стили инлайновые
-- [ ] Приложение работает: список рендерится, чекбокс переключает состояние
-- [ ] `ng build` проходит без ошибок и предупреждений о бюджетах
-- [ ] Вы ответили на все вопросы в этом файле
-- [ ] Вы сделали Pull Request в основной репозиторий и подписали его своими именем и фамилией
+- [да] `ng new` выполнен одной командой с нужными флагами, без интерактивных вопросов
+- [да] Все сущности из шага 3 созданы через `ng generate`
+- [да, дописал, версия ангуляра 22 не поставила] У обоих компонентов `changeDetection: ChangeDetectionStrategy.OnPush`
+- [да] У `TaskItem` шаблон и стили инлайновые
+- [да] Приложение работает: список рендерится, чекбокс переключает состояние
+- [да] `ng build` проходит без ошибок и предупреждений о бюджетах
+- [да] Вы ответили на все вопросы в этом файле
+- [сделаю, иначе ты не увидишь это] Вы сделали Pull Request в основной репозиторий и подписали его своими именем и фамилией
 
 ---
 
