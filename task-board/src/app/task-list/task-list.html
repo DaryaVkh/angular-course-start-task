@@ -1,0 +1,10 @@
+<p>task list board</p>
+
+<section class="tasks">
+  @for (task of tasks(); track task.id) {
+    <app-task-item
+      [task]="task"
+      (toggled)="taskService.toggle($event)"
+    />
+  }
+</section>

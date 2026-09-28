@@ -52,15 +52,19 @@ ng serve --open --port 4300
 
 1. Какую команду/команды использовали для создания приложения?
 
-Ответ:
+Ответ: ng new task-board --routing --style=scss --ssr=false --skip-tests=false --dry-run
+
+ng new task-board --routing --style=scss --ssr=false --skip-tests=false
+
 
 2. Какая версия пакетов ангуляра в сгенерированном package.json?
 
-Ответ:
+Ответ: (common, compiler, core, forms, platform-browser, router, compiler-cli): ^21.2.0 ;
+(build и cli): "^21.2.24".
 
 3. Какой установился пакет для тестирования?
 
-Ответ:
+Ответ: "vitest": "^4.0.8"
 
 ### Шаг 3. Сгенерировать код — только через CLI
 
@@ -84,15 +88,25 @@ ng serve --open --port 4300
 
 Выпишите команды, которые использовали для генерации каждого пункта:
 
-Task:
+Task: 
+1. ng generate interface task model --dry-run 
+2. ng generate interface task model
 
-TaskService:
+TaskService: 
+1. ng generate service task --type=service --dry-run 
+2. ng generate service task --type=service
 
-TaskList:
+TaskList: 
+1. ng generate component task-list --change-detection=OnPush --dry-run 
+2. ng generate component task-list --change-detection=OnPush
 
-TaskItem:
+TaskItem: 
+1.  ng generate component task-item --inline-template --inline-style --change-detection=OnPush --dry-run 
+2. ng generate component task-item --inline-template --inline-style --change-detection=OnPush
 
-TimeAgo:
+TimeAgo: 
+1. ng generate pipe time-ago --dry-run
+2. ng generate pipe time-ago
 
 ### Шаг 4. Связать
 
@@ -119,19 +133,22 @@ ng build
 
 1. Куда легла сборка и почему у файлов такие имена?
 
-Ответ:
+Ответ: сборка легла в angular-course-start-task/task-board/dist/task-board ;
+Файлы имеют хеш в названии для кеширования, при изменении файлов меняется хеш - браузер понимает, что файл обновился - нужно загрузить новую версию.
 
 2. Какой размер `initial` бандла показал CLI?
 
-Ответ:
+Ответ: Initial total: 202.41 kB и Estimated transfer size: 55.29 kB  
 
 3. Чем отличается вывод `ng build` от `ng build --configuration development`?
 
-Ответ:
+Ответ: ng build это production сборка (она более оптимизована). Вывод ng build он меньше по размеру (Initial составил 202.41 kB), чем у ng build --configuration development (Initial составил 1.28MB).
+ng build --configuration development это сборка для разработки,а также у нее у файлов в именах нет хеша.
 
 4. Что покажет `ng build --dry-run` и почему такого флага у `build` нет?
 
-Ответ:
+Ответ: ng build --dry-run покажет ошибку `Error: Unknown argument: dry-run`.
+У build нет такого флага, так как этот флаг нужен для команд, которые создают файлы. --dry-run позволяет заранее посмотреть список файлов без их создания. ng build не генерирует новые файлы, а собирает уже существующее.
 
 ---
 
