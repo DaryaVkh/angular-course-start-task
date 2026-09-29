@@ -52,24 +52,24 @@ ng serve --open --port 4300
 
 1. Какую команду/команды использовали для создания приложения?
 
-Ответ:
+Ответ: `ng new task-board --style=scss --routing=true --ssr=false --skip-tests=false --interactive=false --skip-install=true` и затем `npm install --legacy-peer-deps` (если изначально ошибка с edgesOut)
 
 2. Какая версия пакетов ангуляра в сгенерированном package.json?
 
-Ответ:
+Ответ: Версия `^21.2.0` для основных пакетов (`@angular/core`, `@angular/common`, ...) и `^21.2.24` для CLI/сборщика.
 
 3. Какой установился пакет для тестирования?
 
-Ответ:
+Ответ: `vitest` (и `jsdom` для эмуляции браузера).
 
 ### Шаг 3. Сгенерировать код — только через CLI
 
 Создайте **командами `ng generate`** (руками файлы не создавать):
 
 | Что           | Требование                                                                                                               |
-| ------------- |--------------------------------------------------------------------------------------------------------------------------|
+| ------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `Task`        | Интерфейс: `id: number`, `title: string`, `done: boolean`, `createdAt: Date`. Название файла должно быть `task.model.ts` |
-| `TaskService` | Сервис с массивом задач в `signal` (`readonly tasks = signal<Task[]>([]);`) и методом переключения `toggle`                   |
+| `TaskService` | Сервис с массивом задач в `signal` (`readonly tasks = signal<Task[]>([]);`) и методом переключения `toggle`              |
 | `TaskList`    | Компонент, стратегия обнаружения изменений — **OnPush**                                                                  |
 | `TaskItem`    | Компонент, **OnPush**, с инлайновым шаблоном и инлайновыми стилями                                                       |
 | `TimeAgo`     | Пайп, превращающий `Date` в строку «5 минут назад»                                                                       |
@@ -85,14 +85,19 @@ ng serve --open --port 4300
 Выпишите команды, которые использовали для генерации каждого пункта:
 
 Task:
+`ng generate interface task --type=model`
 
 TaskService:
+`ng generate service task-service`
 
 TaskList:
+`ng generate component task-list --change-detection=OnPush`
 
 TaskItem:
+`ng generate component task-item --change-detection=OnPush --inline-template --inline-style`
 
 TimeAgo:
+`ng generate pipe time-ago`
 
 ### Шаг 4. Связать
 
@@ -119,19 +124,19 @@ ng build
 
 1. Куда легла сборка и почему у файлов такие имена?
 
-Ответ:
+Ответ: Сборка легла в папку `dist/task-board/`. Имена файлов (например, `main-KZYLAQPE.js`) содержат уникальные хэши, сгенерированные сборщиком. Это нужно для сброса кэша: если код изменится, хэш станет другим, и браузер скачает новый файл, а не возьмет старую версию из своего кэша.
 
 2. Какой размер `initial` бандла показал CLI?
 
-Ответ:
+Ответ: 200.93 kB.
 
 3. Чем отличается вывод `ng build` от `ng build --configuration development`?
 
-Ответ:
+Ответ: При обычном `ng build` файлы минифицируются и оптимизируются, а в их именах появляются хэши. При `ng build --configuration development` оптимизация и хэширование отключаются для ускорения сборки, поэтому файлы называются просто `main.js`, а их размер больше.
 
 4. Что покажет `ng build --dry-run` и почему такого флага у `build` нет?
 
-Ответ:
+Ответ: Выдаст ошибку Error: Unknown argument: dry-run. Флаг --dry-run нужен только там, где Angular создает или меняет файлы проекта (например, в ng new или ng generate), чтобы мы могли посмотреть, что произойдет, ничего не сломав. А команда build просто собирает наш готовый код в отдельную папку dist/ и исходники никак не трогает, поэтому такой флаг ей просто не нужен.
 
 ---
 
@@ -145,14 +150,14 @@ ng build
 
 ## Чек-лист сдачи
 
-- [ ] `ng new` выполнен одной командой с нужными флагами, без интерактивных вопросов
-- [ ] Все сущности из шага 3 созданы через `ng generate`
-- [ ] У обоих компонентов `changeDetection: ChangeDetectionStrategy.OnPush`
-- [ ] У `TaskItem` шаблон и стили инлайновые
-- [ ] Приложение работает: список рендерится, чекбокс переключает состояние
-- [ ] `ng build` проходит без ошибок и предупреждений о бюджетах
-- [ ] Вы ответили на все вопросы в этом файле
-- [ ] Вы сделали Pull Request в основной репозиторий и подписали его своими именем и фамилией
+- [x] `ng new` выполнен одной командой с нужными флагами, без интерактивных вопросов
+- [x] Все сущности из шага 3 созданы через `ng generate`
+- [x] У обоих компонентов `changeDetection: ChangeDetectionStrategy.OnPush`
+- [x] У `TaskItem` шаблон и стили инлайновые
+- [x] Приложение работает: список рендерится, чекбокс переключает состояние
+- [x] `ng build` проходит без ошибок и предупреждений о бюджетах
+- [x] Вы ответили на все вопросы в этом файле
+- [x] Вы сделали Pull Request в основной репозиторий и подписали его своими именем и фамилией
 
 ---
 
@@ -174,17 +179,31 @@ ng generate component --help
   <summary>Подсказка 2 — что писать в сервисе</summary>
 
 ```ts
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class TaskService {
   private readonly state = signal<Task[]>([
-    { id: 1, title: 'Прочитать лекцию', done: true, createdAt: new Date(Date.now() - 3_600_000) },
-    { id: 2, title: 'Создать проект через ng new', done: false, createdAt: new Date() },
+    {
+      id: 1,
+      title: "Прочитать лекцию",
+      done: true,
+      createdAt: new Date(Date.now() - 3_600_000),
+    },
+    {
+      id: 2,
+      title: "Создать проект через ng new",
+      done: false,
+      createdAt: new Date(),
+    },
   ]);
 
   readonly tasks = this.state.asReadonly();
 
   toggle(id: number): void {
-    this.state.update((tasks) => tasks.map((task) => (task.id === id ? { ...task, done: !task.done } : task)));
+    this.state.update((tasks) =>
+      tasks.map((task) =>
+        task.id === id ? { ...task, done: !task.done } : task,
+      ),
+    );
   }
 }
 ```
@@ -196,12 +215,16 @@ export class TaskService {
 
 ```ts
 @Component({
-  selector: 'app-task-item',
+  selector: "app-task-item",
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TimeAgoPipe],
   template: `
     <label>
-      <input type="checkbox" [checked]="task().done" (change)="toggled.emit(task().id)" />
+      <input
+        type="checkbox"
+        [checked]="task().done"
+        (change)="toggled.emit(task().id)"
+      />
       {{ task().title }} — {{ task().createdAt | timeAgo }}
     </label>
   `,
